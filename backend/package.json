@@ -1,0 +1,14 @@
+{
+  "name": "finb-server",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.cjs"
+  },
+  "dependencies": {
+    "firebase": "^11.0.0",
+    "express": "^5.0.0",
+    "cookie-session": "^2.0.0",
+    "cors": "^2.8.5"
+  }
+}

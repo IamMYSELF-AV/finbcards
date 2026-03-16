@@ -1,0 +1,12 @@
+{
+  "name": "finb-netlify",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "cookie-session": "^2.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.0.0",
+    "firebase": "^11.0.0",
+    "serverless-http": "^3.2.0"
+  }
+}
