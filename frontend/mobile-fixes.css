@@ -1,0 +1,73 @@
+/* Mobile layout fixes layered on top of the bundled styles. */
+@media (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  header .max-w-7xl {
+    padding-left: 16px;
+    padding-right: 16px;
+    height: auto;
+    min-height: 72px;
+  }
+
+  header .max-w-7xl > div {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  main {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 16px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .glass-panel {
+    border-radius: 20px;
+    padding: 18px !important;
+  }
+
+  .min-h-screen .text-5xl,
+  .min-h-screen .text-6xl {
+    font-size: 2.25rem !important;
+    line-height: 2.5rem !important;
+  }
+
+  .min-h-screen .text-2xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+
+  .min-h-screen .text-lg {
+    font-size: 1rem !important;
+  }
+
+  .min-h-screen .text-sm {
+    font-size: 0.875rem !important;
+  }
+
+  .min-h-screen .max-w-md {
+    width: 100% !important;
+  }
+
+  .min-h-screen form {
+    width: 100% !important;
+  }
+
+  .min-h-screen input,
+  .min-h-screen select,
+  .min-h-screen textarea,
+  .min-h-screen button {
+    font-size: 16px !important;
+  }
+
+  .min-h-screen .custom-scrollbar {
+    max-height: 50vh;
+  }
+
+  footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
