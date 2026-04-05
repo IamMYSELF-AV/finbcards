@@ -1,27 +1,76 @@
-// This is a Netlify Functions handler for authentication endpoints
+const querystring = require('querystring');
 
-const handler = async (event) => {
-    switch (event.httpMethod) {
-        case 'POST':
-            return await handleLogin(event);
-        case 'GET':
-            return await handleCurrentUser(event);
-        default:
-            return { statusCode: 405, body: 'Method Not Allowed' };
+exports.handler = async (event, context) => {
+  const path = event.path.replace('/.netlify/functions/api', '');
+  const method = event.httpMethod;
+
+  // Enable CORS
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+
+  if (method === 'OPTIONS') {
+    return { statusCode: 200, headers };
+  }
+
+  // GET /auth/me - Check if user is authenticated
+  if (method === 'GET' && path === '/auth/me') {
+    const cookies = event.headers.cookie || '';
+    const sessionId = cookies.split('session=')[1]?.split(';')[0];
+    
+    if (sessionId) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ authenticated: true, user: { id: sessionId } })
+      };
+    } else {
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({ authenticated: false })
+      };
     }
-};
+  }
 
-const handleLogin = async (event) => {
-    const { username, password } = JSON.parse(event.body);
-    // Your login logic here (e.g., checking user credentials)
-    // Return success or failure response accordingly
-    return { statusCode: 200, body: JSON.stringify({ message: 'Login successful', username }) };
-};
+  // POST /auth/login - Handle login
+  if (method === 'POST' && path === '/auth/login') {
+    try {
+      const body = JSON.parse(event.body || '{}');
+      const { username, password } = body;
 
-const handleCurrentUser = async (event) => {
-    // Logic to retrieve the current user's data
-    // For example, return the logged-in user's information
-    return { statusCode: 200, body: JSON.stringify({ message: 'Authenticated user info' }) };
-};
+      if (username && password) {
+        const sessionId = Math.random().toString(36).substring(7);
+        return {
+          statusCode: 200,
+          headers: {
+            ...headers,
+            'Set-Cookie': `session=${sessionId}; Path=/; HttpOnly`
+          },
+          body: JSON.stringify({ success: true, message: 'Login successful', user: { username } })
+        };
+      } else {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({ success: false, message: 'Invalid credentials' })
+        };
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ success: false, message: 'Server error' })
+      };
+    }
+  }
 
-module.exports = { handler };
+  return {
+    statusCode: 404,
+    headers,
+    body: JSON.stringify({ message: 'Not found' })
+  };
+};
